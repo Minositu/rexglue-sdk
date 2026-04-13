@@ -107,34 +107,34 @@ static int native_lstrcmpiA(const char* s1, const char* s2) {
 // C UTF-16 Widestring functions (int16_t*)
 // ---------------------------------------------------------------------------
 
-static int native_wcslen(const int16_t* str) {
+static uint32_t native_wcslen(const int16_t* str) {
   const int16_t* last = str;
-  while ( *last++ )
-      ;
+  while (*last++)
+    ;
   return last - str - 1;
 }
 
-static int native_wcscmp(const int16_t* lhs, const int16_t* rhs) {
-  while(*lhs && (*lhs == *rhs)) {
+static uint32_t native_wcscmp(const int16_t* lhs, const int16_t* rhs) {
+  while (*lhs && (*lhs == *rhs)) {
     lhs++;
     rhs++;
   }
-  return (int)(*lhs)-(int)(*rhs);
+  return (int)(*lhs) - (int)(*rhs);
 }
 
-static int native_wcsncmp(const int16_t* lhs, const int16_t* rhs, int count) {
+static uint32_t native_wcsncmp(const int16_t* lhs, const int16_t* rhs, int count) {
   for (; count > 0; count--, lhs++, rhs++) {
     if (*lhs != *rhs)
-        return (int)(*lhs) - (int)(*rhs);
+      return (int)(*lhs) - (int)(*rhs);
 
     if (*lhs == L'\0')
-        return 0;
+      return 0;
   }
 
   return 0;
 }
 
-static int native_wcscoll(const int16_t* lhs, const int16_t* rhs) {
+static uint32_t native_wcscoll(const int16_t* lhs, const int16_t* rhs) {
   if (lhs && rhs)
     return native_wcscmp(lhs, rhs);
   return 22;  // EINVAL
@@ -147,13 +147,12 @@ static int16_t* native_wcschr(const int16_t* str, int16_t ch) {
   return (*str == ch) ? (int16_t*)str : 0;
 }
 
-static int16_t* native_wcsrchr(const int16_t* str, int16_t ch)
-{
+static int16_t* native_wcsrchr(const int16_t* str, int16_t ch) {
   const int16_t* res = 0;
 
   for (; *str; str++)
     if (*str == ch)
-        res = str;
+      res = str;
 
   return (int16_t*)(ch ? res : str);
 }
@@ -162,7 +161,7 @@ static int16_t* native_wcscpy(const int16_t* src, int16_t* dst) {
   int16_t* d = dst;
 
   while ((*d++ = *src++))
-      ;
+    ;
 
   return dst;
 }
@@ -176,7 +175,7 @@ static int16_t* native_wcsncpy(int16_t* dest, const int16_t* src, int count) {
   return dest;
 }
 
-static int native_wcsncpy_s(int16_t* dst, size_t dstsz, const int16_t* src, size_t count) {
+static uint32_t native_wcsncpy_s(int16_t* dst, size_t dstsz, const int16_t* src, size_t count) {
   if (!dst || !src || dstsz == 0)
     return 22;  // EINVAL
 
@@ -196,7 +195,7 @@ static int native_wcsncpy_s(int16_t* dst, size_t dstsz, const int16_t* src, size
   return 0;
 }
 
-int16_t* native_wcsstr(const int16_t* dest, const int16_t* src) {
+static int16_t* native_wcsstr(const int16_t* dest, const int16_t* src) {
   if (!*src)
     return (int16_t*)dest;
 
